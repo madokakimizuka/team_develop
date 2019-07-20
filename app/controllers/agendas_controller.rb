@@ -1,4 +1,5 @@
 class AgendasController < ApplicationController
+  before_action :set_agenda, only: %i[destroy]
   # before_action :set_agenda, only: %i[show edit update destroy]
 
   def index
@@ -19,6 +20,13 @@ class AgendasController < ApplicationController
     else
       render :new
     end
+  end
+
+  def destroy
+    @agenda.destroy
+    # @agenda に紐付いているTeam に所属するユーザー全員に通知メールが飛ぶ
+    InformDeleteAgendaMailer.inform_delete_agenda_mail(@agenda).deliver
+    redirect_to dashboard_url, notice: 'アジェンダを削除しました！'
   end
 
   private
