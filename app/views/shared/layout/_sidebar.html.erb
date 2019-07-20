@@ -30,13 +30,23 @@
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <% @working_team.agendas.each do |agenda| %>
           <li class="nav-item has-treeview menu-open">
+
+
             <a href="#" class="nav-link">
               <i class="fa fa-circle-o nav-icon"></i>
               <p>
                 <%= agenda.title %>
+                <object>
+                <% if current_user == agenda.user || current_user == agenda.team.owner %>
+                  <%= link_to 'delete', agenda_path(agenda.id), method: :delete, :confirm => '本当に削除しますか?' %>
+                <% end %>
+                </object>
                 <i class="right fa fa-angle-left"></i>
               </p>
             </a>
+
+
+
             <ul class="nav nav-treeview" style="display: block;">
               <% agenda.articles.each do |article| %>
                 <li class="nav-item">
@@ -51,6 +61,8 @@
                 <% end %>
               </li>
             </ul>
+
+
           </li>
         <% end %>
       </ul>
