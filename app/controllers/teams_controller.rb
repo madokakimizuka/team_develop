@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy]
+  before_action :set_team, only: %i[show edit update destroy owner_update]
 
   def index
     @teams = Team.all
@@ -36,6 +36,12 @@ class TeamsController < ApplicationController
       flash.now[:error] = '保存に失敗しました、、'
       render :edit
     end
+  end
+
+  def owner_update
+    @team.update(params.permit(:owner_id))
+    TeamMailer.team_mail(@team).deliver
+    redirect_to teams_url, notice: 'オーナー変更に成功しました!'
   end
 
   def destroy
